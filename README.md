@@ -1,5 +1,5 @@
 # TranslateSet
-一种小型的翻译集合工具，[这里](https://github.com/lsj9383/translate-set/blob/master/src/test/TransTest.java) 是一个使用示例。并且提供[在线翻译](http://139.199.209.106/trans/) 。
+一种小型的翻译集合工具，[这里](https://github.com/lsj9383/translate-set/blob/master/src/test/TranslatorTest.java) 是一个使用示例。并且提供[在线翻译](http://139.199.209.106/trans/) 。
 目前仅支持**汉英互译**，支持的翻译来源:
 * [谷歌翻译](http://translate.google.cn/)
 * [百度翻译](http://fanyi.baidu.com/)
@@ -12,9 +12,9 @@
 将仓库的lib目录下的所有jar添加到classpath中。并确保ide的编码方式是**【UTF-8】**。
 ### 1.*最小的实例*
 ```java
-import com.lsj.trans.LANG;
-import com.lsj.trans.factory.TFactory;
-import com.lsj.trans.factory.TranslatorFactory;
+import com.leopoo.translate.LANG;
+import com.leopoo.translate.factory.TFactory;
+import com.leopoo.translate.factory.TranslatorFactory;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
@@ -27,9 +27,9 @@ public class Main {
 ### 2.*引入包*
 引入所需要的package。
 ```java
-import com.lsj.trans.LANG;							/* 翻译的语言支持 */
-import com.lsj.trans.factory.TFactory;				/* 工厂接口 */
-import com.lsj.trans.factory.TranslatorFactory;		/* 翻译工厂 */
+import com.leopoo.translate.LANG;							/* 翻译的语言支持 */
+import com.leopoo.translate.factory.TFactory;				/* 工厂接口 */
+import com.leopoo.translate.factory.TranslatorFactory;		/* 翻译工厂 */
 ```
 
 ### 3.*实例化翻译工厂*
@@ -66,12 +66,7 @@ lator = factory.get("omi");
 ```
 ### 2.*翻译*
 ```JAVA
-/*
- *fromLang 和 toLang 用于指定源语言 与 目标翻译语言
- *中文 LANG.ZH
- *英文 LANG.EN
- *
- */
+Lang
 lator.trans(LANG fromLang, LANG toLang, string);
 ```
 
@@ -111,7 +106,7 @@ HttpParams抽象类只是个工具类，可以单独抽取出来使用。为了�
 #### 1).类定义
 类定义需要增加一个注解，注解里面是该翻译类的id。翻译工厂在实例化的时候会将标注了注解的类实例化，并存放在工程的缓存中，用户通过id可以获得该实例，正如之前所看到的代码。下面是一个类定义的示例
 ```java
-@TranslatorComponent(id = "translator-id")
+@TranslatorComponent(id = value)
 final public class UserTranslator extends AbstractOnlineTranslator {
 	
 }
