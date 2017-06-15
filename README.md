@@ -1,15 +1,14 @@
 # translate-api 
 forked from lsj9383/translate-set 改造成maven项目,增加文字语言识别,网络代理
 
-目前仅支持**汉英互译**，支持的翻译来源:
+支持的翻译来源:
 * [谷歌翻译](http://translate.google.com/)
 * [百度翻译](http://fanyi.baidu.com/)
 * [有道翻译](http://fanyi.youdao.com/)
 
 以后增加相关api翻译
 
-
-##文字语言检测
+##  文字语言检测
 ```java
 //参考 https://github.com/shuyo/language-detection
 public class DetectorTest {
@@ -39,7 +38,7 @@ public class DetectorTest {
     }
 }
 ```
-###翻译
+## 翻译
 ```java
 public class TranslatorTest {
     TFactory factory = null;
@@ -62,7 +61,7 @@ public class TranslatorTest {
 }
 ```
 
-###谷歌翻译tk JavaScript算法
+## 谷歌翻译tk JavaScript算法
 ```javascript
 //参考 https://github.com/Stichoza/google-translate-php/issues/32
 var TKK = ((function() {
