@@ -1,4 +1,4 @@
-package com.leopoo.translate;
+package com.leopoo.translate.util;
 
 /**
  * 翻译方式

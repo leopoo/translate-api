@@ -1,4 +1,4 @@
-package com.leopoo.translate;
+package com.leopoo.translate.lang;
 
 public enum LANG {
 
