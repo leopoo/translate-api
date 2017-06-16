@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
@@ -13,20 +15,26 @@ import javax.script.ScriptException;
 import com.leopoo.http.HttpParams;
 import com.leopoo.http.HttpPostParams;
 import com.leopoo.translate.AbstractOnlineTranslator;
-import com.leopoo.translate.LANG;
-import com.leopoo.translate.Trans;
+import com.leopoo.translate.enums.LANG;
+import com.leopoo.translate.util.Proxy;
+import com.leopoo.translate.enums.Trans;
 import com.leopoo.translate.annotation.TranslatorComponent;
 
+import com.leopoo.translate.util.TranslationResult;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.apache.http.HttpHost;
 
 @TranslatorComponent(id = Trans.Google)
-final public class GoogleTranslator extends AbstractOnlineTranslator {
-    private String scriptPath = "tk.js";
+public final class GoogleTranslator extends AbstractOnlineTranslator implements Proxy {
+
+    private final String scriptPath = "tk.js";
 
     private static ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
 
     private String script = "";
+
+    private HttpHost proxy;
 
     public GoogleTranslator() {
         try {
@@ -41,40 +49,52 @@ final public class GoogleTranslator extends AbstractOnlineTranslator {
         } catch (IOException | ScriptException e) {
             e.printStackTrace();
         }
-        langMap.put(LANG.EN, "en");
-        langMap.put(LANG.ZH, "zh-CN");
+    }
+
+    public GoogleTranslator(String host, int port) {
+        this(host, port, null, null);
+    }
+
+    public GoogleTranslator(String host, int port, String user, String password) {
+        this();
+        this.proxy = new HttpHost(host, port);
     }
 
     @Override
     protected String getResponse(String query, LANG origin, LANG target) throws Exception {
-        HttpHost proxy = new HttpHost("127.0.0.1", 1080);
+        // HttpHost proxy = new HttpHost("127.0.0.1", 1080);
 
         HttpParams params = new HttpPostParams(proxy); // 统一采用post，若字符长度小于999用get也可以的
         String tk = tk(query);
-
-        params.put("client", "t").put("sl", "auto").put("tl", langMap.get(target)).put("hl", langMap.get(origin))
+        params.put("client", "t").put("sl", "auto").put("tl", target.getGoogle()).put("hl", origin.getGoogle())
                 .put("dt", "at").put("dt", "bd").put("dt", "ex").put("dt", "ld").put("dt", "md").put("dt", "qca")
                 .put("dt", "rw").put("dt", "rm").put("dt", "ss").put("dt", "t").put("ie", "UTF-8").put("oe", "UTF-8")
                 .put("source", "btn").put("ssel", "3").put("tsel", "0").put("kc", "0").put("tk", tk).put("q", query);
 
-        return params.send2String("https://translate.google.com.hk/translate_a/single");
+        return params.send2String(Trans.Google.getUrl());
     }
 
     @Override
-    protected String parseString(String jsonString) {
+    protected TranslationResult parse(String jsonString) {
+        TranslationResult result = new TranslationResult();
         JSONArray jsonArray = JSONArray.fromObject(jsonString);
         JSONArray segments = jsonArray.getJSONArray(0);
-        StringBuilder result = new StringBuilder();
-
-        for (int i = 0; i < segments.size(); i++) {
-            result.append(segments.getJSONArray(i).getString(0));
+        List<String> dst = new ArrayList<>();
+        for (int i = 0, len = segments.size(); i < len; i++) {
+            dst.add(segments.getJSONArray(i).getString(0));
         }
+        result.setDst(dst);
+        return result;
 
-        return new String(result);
     }
 
     private String tk(String val) throws Exception {
         Invocable inv = (Invocable) engine;
         return (String) inv.invokeFunction("tk", val);
+    }
+
+    @Override
+    public void setProxy(HttpHost proxy) {
+        this.proxy = proxy;
     }
 }

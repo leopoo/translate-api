@@ -1,4 +1,4 @@
-package com.leopoo.translate.util;
+package com.leopoo.translate.enums;
 
 /**
  * @author zbb

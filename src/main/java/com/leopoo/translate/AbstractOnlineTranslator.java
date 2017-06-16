@@ -3,34 +3,38 @@ package com.leopoo.translate;
 import com.leopoo.language.Detector;
 import com.leopoo.language.DetectorFactory;
 import com.leopoo.language.util.LangDetectException;
+import com.leopoo.translate.enums.LANG;
+import com.leopoo.translate.util.TranslationResult;
+import com.leopoo.translate.enums.ResultState;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractOnlineTranslator implements Translator {
-    protected Map<LANG, String> langMap = new HashMap<>(); // 语言映射，由子类完成
 
     @Override
-    final public String translate(String query, LANG origin, LANG target) throws Exception {
-        String response = "";
+    final public TranslationResult translate(String query, LANG origin, LANG target) throws Exception {
+        TranslationResult result = null;
         try {
-
-            response = getResponse(query, origin, target);
-            String result = parseString(response);
-            return result;
+            String response = getResponse(query, origin, target);
+            result = parse(response);
+            result.setOrigin(origin.getLanguage());
+            result.setTarget(target.getLanguage());
+            result.setSrc(query);
         } catch (Exception e) {
-            e.printStackTrace();
-            return response;
+            result = new TranslationResult();
+            result.setStatus(ResultState.FAILD.getStatus());
         }
+        return result;
     }
 
     @Override
-    final public String translate(String query, LANG target) throws Exception {
+    final public TranslationResult translate(String query, LANG target) throws Exception {
         return translate(query, detect(query), target);
     }
 
     @Override
-    final public String translate(String query) throws Exception {
+    final public TranslationResult translate(String query) throws Exception {
         LANG origin = detect(query);
         LANG target = LANG.ZH;
         if (origin.equals(LANG.ZH)) { // 如果是中文 翻译成英文
@@ -48,5 +52,5 @@ public abstract class AbstractOnlineTranslator implements Translator {
 
     abstract protected String getResponse(String query, LANG origin, LANG target) throws Exception;
 
-    abstract protected String parseString(String jsonString);
+    abstract protected TranslationResult parse(String jsonString);
 }

@@ -4,23 +4,18 @@ import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import com.leopoo.language.Detector;
 import com.leopoo.language.DetectorFactory;
 import com.leopoo.language.util.LangDetectException;
 import com.leopoo.translate.AbstractOnlineTranslator;
-import com.leopoo.translate.Trans;
 import com.leopoo.translate.Translator;
 import com.leopoo.translate.annotation.TranslatorComponent;
 import com.leopoo.translate.exception.DupIdException;
 import com.leopoo.translate.impl.BaiduTranslator;
 import com.leopoo.translate.impl.GoogleTranslator;
 import com.leopoo.translate.impl.YoudaoTranslator;
+import com.leopoo.translate.enums.Trans;
 
 public abstract class AbstractTranslatorFactory implements TFactory {
 

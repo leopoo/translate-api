@@ -1,4 +1,4 @@
-package com.leopoo.translate;
+package com.leopoo.translate.util;
 
 import org.apache.http.HttpHost;
 

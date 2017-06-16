@@ -1,6 +1,6 @@
 package com.leopoo.translate.annotation;
 
-import com.leopoo.translate.Trans;
+import com.leopoo.translate.enums.Trans;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

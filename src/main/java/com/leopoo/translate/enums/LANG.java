@@ -1,30 +1,40 @@
-package com.leopoo.translate.lang;
+package com.leopoo.translate.enums;
 
 public enum LANG {
 
-    EN("en", "英文"), // 英文
-    ZH("zh-cn", "简体中文");
+    AUTO("auto", "auto", "auto", "auto", "自动检测"), // 语言检测,百度,谷歌,有道,名称
+    EN("en", "en", "en", "EN", "英文"), // 语言检测,百度,谷歌,有道,名称
+    ZH("zh-cn", "zh", "zh-CN", "ZH_CN", "简体中文");
 
     /**
      * 
      * @param language 语言检测返回字符串
-     * @param label 源语言中文名称
+     * @param name 源语言中文名称
      */
-    LANG(String language, String label) {
+    LANG(String language, String baidu, String google, String youdao, String name) {
         this.language = language;
-        this.label = label;
+        this.baidu = baidu;
+        this.google = google;
+        this.youdao = youdao;
+        this.name = name;
     }
 
     private final String language;
 
-    private final String label;
+    private final String baidu;
+
+    private final String google;
+
+    private final String youdao;
+
+    private final String name;
 
     public String getLanguage() {
         return language;
     }
 
-    public String getLabel() {
-        return label;
+    public String getName() {
+        return name;
     }
 
     /**
@@ -40,4 +50,15 @@ public enum LANG {
         return LANG.EN;
     }
 
+    public String getBaidu() {
+        return baidu;
+    }
+
+    public String getGoogle() {
+        return google;
+    }
+
+    public String getYoudao() {
+        return youdao;
+    }
 }

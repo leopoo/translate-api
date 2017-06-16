@@ -3,40 +3,43 @@ package com.leopoo.translate.impl;
 import com.leopoo.http.HttpParams;
 import com.leopoo.http.HttpPostParams;
 import com.leopoo.translate.AbstractOnlineTranslator;
-import com.leopoo.translate.LANG;
-import com.leopoo.translate.Trans;
+import com.leopoo.translate.enums.LANG;
+import com.leopoo.translate.enums.Trans;
+import com.leopoo.translate.util.TranslationResult;
 import com.leopoo.translate.annotation.TranslatorComponent;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @TranslatorComponent(id = Trans.Baidu)
 final public class BaiduTranslator extends AbstractOnlineTranslator {
 
     public BaiduTranslator() {
-        langMap.put(LANG.EN, "en");
-        langMap.put(LANG.ZH, "zh");
     }
 
     @Override
     public String getResponse(String query, LANG origin, LANG target) throws Exception {
 
-        HttpParams params = new HttpPostParams().put("from", langMap.get(origin)).put("to", langMap.get(target))
+        HttpParams params = new HttpPostParams().put("from", origin.getBaidu()).put("to", target.getBaidu())
                 .put("query", query).put("transtype", "translang").put("simple_means_flag", "3");
 
-        return params.send2String("http://fanyi.baidu.com/v2transapi");
+        return params.send2String(Trans.Baidu.getUrl());
     }
 
     @Override
-    protected String parseString(String jsonString) {
+    protected TranslationResult parse(String jsonString) {
+        TranslationResult result = new TranslationResult();
         JSONObject jsonObject = JSONObject.fromObject(jsonString);
         JSONArray segments = jsonObject.getJSONObject("trans_result").getJSONArray("data");
-        StringBuilder result = new StringBuilder();
-
-        for (int i = 0; i < segments.size(); i++) {
-            result.append(i == 0 ? "" : "\n");
-            result.append(segments.getJSONObject(i).getString("dst"));
+        List<String> dst = new ArrayList<>();
+        for (int i = 0, len = segments.size(); i < len; i++) {
+            JSONObject json = segments.getJSONObject(i);
+            dst.add(json.getString("dst"));
         }
-        return new String(result);
+        result.setDst(dst);
+        return result;
     }
 }
