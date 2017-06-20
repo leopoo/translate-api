@@ -3,6 +3,7 @@ package com.leopoo.language;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,8 +13,13 @@ import com.leopoo.language.util.ErrorCode;
 import com.leopoo.language.util.LangDetectException;
 import com.leopoo.language.util.LangProfile;
 
+import com.leopoo.translate.enums.LANG;
 import net.arnx.jsonic.JSON;
 import net.arnx.jsonic.JSONException;
+import org.apache.commons.io.Charsets;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Language Detector Factory Class
@@ -194,5 +200,22 @@ public class DetectorFactory {
 
     public static final List<String> getLangList() {
         return Collections.unmodifiableList(instance_.langlist);
+    }
+
+    public static void init(String path) throws IOException, LangDetectException {
+        List<String> list = new ArrayList<>();
+        for (LANG lang : LANG.values()) {
+            if (!lang.equals(LANG.AUTO)) {
+                InputStream in = DetectorFactory.class.getClassLoader()
+                        .getResourceAsStream(path + "/" + lang.getLanguage());
+                List<String> contents = IOUtils.readLines(in, "UTF-8");
+                if (!contents.isEmpty()) {
+                    list.add(StringUtils.join(contents, ""));
+                }
+            }
+        }
+        if (!list.isEmpty()) {
+            loadProfile(list);
+        }
     }
 }

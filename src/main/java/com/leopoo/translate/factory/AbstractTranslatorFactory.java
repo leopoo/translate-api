@@ -30,9 +30,10 @@ public abstract class AbstractTranslatorFactory implements TFactory {
 
     public AbstractTranslatorFactory() throws ClassNotFoundException, InstantiationException, IllegalAccessException,
             DupIdException, URISyntaxException, LangDetectException {
-        File f = new File(this.getClass().getClassLoader().getResource(profilePath).getFile());
 
-        DetectorFactory.loadProfile(f); //加载语料
+        String path = DetectorFactory.class.getClass().getClassLoader().getResource(profilePath).getFile();
+        File f = new File(path);
+        DetectorFactory.loadProfile(f); // 加载语料
 
         // Detector detector = DetectorFactory.create();
 

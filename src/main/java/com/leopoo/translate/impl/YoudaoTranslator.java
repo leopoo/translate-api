@@ -11,6 +11,9 @@ import com.leopoo.translate.util.TranslationResult;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @TranslatorComponent(id = Trans.Youdao)
 final public class YoudaoTranslator extends AbstractOnlineTranslator {
 
@@ -32,6 +35,12 @@ final public class YoudaoTranslator extends AbstractOnlineTranslator {
         JSONObject jsonObject = JSONObject.fromObject(jsonString);
         JSONArray segments = jsonObject.getJSONArray("translateResult");
 
+        List<String> dst = new ArrayList<>();
+        for (int i = 0, len = segments.size(); i < len; i++) {
+            JSONArray json = segments.getJSONArray(i);
+            dst.add(json.getJSONObject(0).getString("tgt"));
+        }
+        result.setDst(dst);
         return result;
     }
 }

@@ -1,6 +1,8 @@
 package com.leopoo.translate.util;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.leopoo.translate.enums.ResultState;
@@ -132,6 +134,14 @@ public class TranslationResult implements Serializable {
 
     public void setErrorCode(String errorCode) {
         this.errorCode = errorCode;
+    }
+
+    public String[] getTranslation() {
+        if (dst != null) {
+            return dst.toArray(new String[] {});
+        } else {
+            return new String[] {};
+        }
     }
 
 }

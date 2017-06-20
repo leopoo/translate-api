@@ -34,4 +34,9 @@ public interface Translator {
      */
     public TranslationResult translate(String query) throws Exception;
 
+    /**
+     * 初始化默认
+     */
+//    public void initDetector();
+
 }
