@@ -141,17 +141,17 @@ public class DetectorFactory {
     static /* package scope */ void addProfile(LangProfile profile, int index, int langsize)
             throws LangDetectException {
         String lang = profile.name;
-        if (instance_.langlist.contains(lang)) { throw new LangDetectException(ErrorCode.DuplicateLangError,
-                "duplicate the same language profile"); }
-        instance_.langlist.add(lang);
-        for (String word : profile.freq.keySet()) {
-            if (!instance_.wordLangProbMap.containsKey(word)) {
-                instance_.wordLangProbMap.put(word, new double[langsize]);
-            }
-            int length = word.length();
-            if (length >= 1 && length <= 3) {
-                double prob = profile.freq.get(word).doubleValue() / profile.n_words[length - 1];
-                instance_.wordLangProbMap.get(word)[index] = prob;
+        if (!instance_.langlist.contains(lang)) {
+            instance_.langlist.add(lang);
+            for (String word : profile.freq.keySet()) {
+                if (!instance_.wordLangProbMap.containsKey(word)) {
+                    instance_.wordLangProbMap.put(word, new double[langsize]);
+                }
+                int length = word.length();
+                if (length >= 1 && length <= 3) {
+                    double prob = profile.freq.get(word).doubleValue() / profile.n_words[length - 1];
+                    instance_.wordLangProbMap.get(word)[index] = prob;
+                }
             }
         }
     }
